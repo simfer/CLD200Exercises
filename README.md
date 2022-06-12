@@ -51,6 +51,7 @@ entity Mitigations : managed {
 }
 ```
 
+### Task 3 - Chapter 1 - Point (d)
 ```
 using { riskmanagement as rm } from '../db/schema'; 
 
@@ -258,12 +259,27 @@ entity BusinessPartners as projection on external.A_BusinessPartner {
 //### END OF OF INSERT
 ```
 
-### Task 2 - Chapter 1 - Point (f)
+### Task 1 - Chapter 1 - Point (d) - Open the *risk-service.js* file and uncomment the BusinessPartners line
+```
+using { riskmanagement as rm } from '../db/schema'; 
+
+@path: 'service/risk' 
+service RiskService { 
+    entity Risks as projection on rm.Risks; 
+    annotate Risks with @odata.draft.enabled; 
+    
+    entity Mitigations as projection on rm.Mitigations; 
+    annotate Mitigations with @odata.draft.enabled; 
+    @readonly entity BusinessPartners as projection on rm.BusinessPartners; 
+}
+```
+
+### Task 2 - Chapter 1 - Point (f) - Add the APIKey to the *.env* file
 ```
 apikey=<YOUR-API-KEY>
 ```
 
-### Task 2 - Chapter 1 - Point (h)
+### Task 2 - Chapter 1 - Point (h) -  Change the *packahe.json* file to include the new credentials
 ```
 {
     "name": "risk-management",
@@ -305,7 +321,7 @@ apikey=<YOUR-API-KEY>
 }
 ```
 
-### Task 2 - Chapter 1 - Point (i)
+### Task 2 - Chapter 1 - Point (i) - Replace *risk-service.js* content with this
 ```
 // Imports 
 const cds = require("@sap/cds");
@@ -382,15 +398,13 @@ entity Mitigations : managed {
     risks : Association to many Risks on risks.miti = $self; 
 }
 
-//### BEGIN OF INSERT
 // using an external service from S/4
 using { API_BUSINESS_PARTNER as external } from '../srv/external/API_BUSINESS_PARTNER.csn';
 entity BusinessPartners as projection on external.A_BusinessPartner { 
     key BusinessPartner, 
     LastName, 
     FirstName 
-} 
-//### END OF OF INSERT
+}
 ```
 
 ### Task 3 - Chapter 1 - Point (d) - Replace the content of the file riskmanagement-Risks.csv with this
@@ -661,63 +675,9 @@ module.exports = cds.service.impl(async function () {
 
 # Exercise 6 - Deploy manually
 
-### Task 2 - Chapter 1 - Point (b) - Update the *package.json* in this way
+### Task 4 - Chapter 1 - Point (b) - Generate the xs-security.json file
 ```
-{
-    "name": "risk-management",
-    "version": "1.0.0",
-    "description": "Template for the the SAP Extension Suite Learning Journey",
-    "author": "m.haug@sap.com",
-    "license": "SAP SAMPLE CODE LICENSE",
-    "repository": "https://github.com/SAP-samples/sap-learning-extension-suite",
-    "engines": {
-        "node": ">=14"
-    },
-    "private": true,
-    "dependencies": {
-        "@sap/cds": "5.1.5",
-        "@sap/cds-dk": "4.1.5",
-        "express": "^4",
-        "hdb": "^0.18.3"
-    },
-    "devDependencies": {
-        "@sap/ux-specification": "^1.96.4",
-        "sqlite3": "^5.0.2"
-    },
-    "scripts": {
-        "start": "cds run"
-    },
-    "sapux": [
-        "app/risks"
-    ],
-    "cds": {
-        "requires": {
-            "API_BUSINESS_PARTNER": {
-                "kind": "odata",
-                "model": "srv/external/API_BUSINESS_PARTNER",
-                "[development]": {
-                    "credentials": {
-                        "url": "https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata/sap/API_BUSINESS_PARTNER/"
-                    }
-                },
-                "[production]": {
-                    "credentials": {
-                        "destination": "API_BUSINESS_PARTNER"
-                    }
-                }
-            },
-            "db": {
-                "kind": "sql"
-            },
-            "xsuaa": {
-                "kind": "xsuaa"
-            }
-        },
-        "hana": {
-            "deploy-format": "hdbtable"
-        }
-    }
-}
+cds add hana,xsuaa,cf-manifest
 ```
 
 ### Task 3 - Chapter 1 - Point (l) - Generate the xs-security.json file
@@ -737,10 +697,6 @@ You should obtain something like this:
   }
 ```
 
-### Task 4 - Chapter 1 - Point (b) - Generate the xs-security.json file
-```
-cds add cf-manifest
-```
 
 ### Task 4 - Chapter 1 - Point (d) - Add the destination service resource to the risk management service
 ```
@@ -817,12 +773,6 @@ applications:
             "API_BUSINESS_PARTNER": {
                 "kind": "odata",
                 "model": "srv/external/API_BUSINESS_PARTNER",
-                //### BEGIN OF DELETE
-                "credentials": {
-                    "url": "https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata/sap/API_BUSINESS_PARTNER/"
-                }
-                //### END OF DELETE
-                //### BEGIN OF INSERT
                 "[development]": {
                     "credentials": {
                         "url": "https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata/sap/API_BUSINESS_PARTNER/"
@@ -833,7 +783,6 @@ applications:
                         "destination": "API_BUSINESS_PARTNER"
                     }
                 }
-                //### END OF INSERT
             },
             "db": {
                 "kind": "sql"
