@@ -1,4 +1,4 @@
-# CLD200_21 - Leonardo
+# CLD200_21
 
 ## Solution 1 - Create a Dev Space for Business Applications
 No Code
