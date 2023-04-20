@@ -827,6 +827,9 @@ cds compile srv/ --to xsuaa > xs-security.json
           description: View Risks
           role-template-references:
           - $XSAPPNAME.RiskViewer
+        oauth2-configuration:
+          redirect-uris:
+            - https://*.cfapps.eu10-004.hana.ondemand.com/login/callback
 ```
 
 #### Task 1 - Point a - Build and deploy
