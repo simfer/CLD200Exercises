@@ -419,7 +419,7 @@ ID;createdAt;createdBy;title;owner;prio_code;descr;miti_ID;impact;bp_BusinessPar
 20466922-7d57-4e76-b14c-e53fd97dcb13;2019-10-24;SYSTEM;Shipment violating export control;Herbert Hunter;L;Violation of export and trade control with unauthorized downloads;20466921-7d57-4e76-b14c-e53fd97dcb13;200000;9980000230
 ```
 
-#### Task 5 - Point b - app/common.cds
+#### Task 5 - Point b - srv/risk-service.js
 ```
 // Import the cds facade object (https://cap.cloud.sap/docs/node.js/cds-facade)
 const cds = require('@sap/cds')
